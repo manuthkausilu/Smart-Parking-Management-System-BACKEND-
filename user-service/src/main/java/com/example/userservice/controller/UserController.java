@@ -1,10 +1,12 @@
 package com.example.userservice.controller;
 
+import com.example.userservice.dto.LoginRequest;
 import com.example.userservice.dto.Response;
 import com.example.userservice.dto.UserDTO;
 import com.example.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,11 +16,21 @@ public class UserController {
     @Autowired
     private UserService userServiceImpl;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping("/register")
     public ResponseEntity<Response> registerUser(@RequestBody UserDTO userDTO) {
         Response response = userServiceImpl.createUser(userDTO);
         return ResponseEntity.status(response.getStatusCode() != 0 ? response.getStatusCode() : 201).body(response);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<Response> loginUser(@RequestBody LoginRequest loginRequest) {
+        Response response = userServiceImpl.login(loginRequest);
+        return ResponseEntity.status(response.getStatusCode() != 0 ? response.getStatusCode() : 200).body(response);
+    }
+
 
     @GetMapping("/getUserById/{id}")
     public ResponseEntity<Response> getUserById(@PathVariable Long id) {
