@@ -2,7 +2,6 @@ package com.example.vehicleservice.controller;
 
 import com.example.vehicleservice.dto.Response;
 import com.example.vehicleservice.dto.VehicleDTO;
-import com.example.vehicleservice.entity.Vehicle;
 import com.example.vehicleservice.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

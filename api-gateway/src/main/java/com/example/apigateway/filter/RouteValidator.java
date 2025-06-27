@@ -17,7 +17,8 @@ public class RouteValidator {
     public static final List<String> openApiEndpoints = List.of(
             "/user-service/api/v1/users/register",
             "/user-service/api/v1/users/login",
-            "/user-service/api/v1/users/validate-token"
+            "/user-service/api/v1/users/validate-token",
+            "/payment-service/payment-service/api/v1/payments/checkPayment"
     );
 
     // Secure all except open endpoints (flexible for trailing slashes, etc.)

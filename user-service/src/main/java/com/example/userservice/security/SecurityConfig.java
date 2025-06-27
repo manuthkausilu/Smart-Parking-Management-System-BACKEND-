@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/users/register",
                                 "/api/v1/users/login",
+                                "/api/v1/users/getUserById/*",
                                 "/api/v1/users/validate-token" // Endpoint to validate token
                         ).permitAll()
                         .anyRequest().authenticated())

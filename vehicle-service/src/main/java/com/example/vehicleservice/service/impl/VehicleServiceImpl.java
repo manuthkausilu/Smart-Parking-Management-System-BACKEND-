@@ -61,10 +61,10 @@ public class VehicleServiceImpl implements VehicleService {
             vehicle.setPlateNumber(vehicle.getPlateNumber());
             vehicle.setVehicleType(vehicle.getVehicleType());
             vehicle.setUserId(vehicle.getUserId());
-            vehicleRepo.save(vehicle);
+            Vehicle updateVahicle =vehicleRepo.save(vehicle);
             response.setStatusCode(200);
             response.setMessage("Vehicle updated successfully");
-            response.setVehicle(vehicleDTO);
+            response.setVehicle(modelMapper.map(updateVahicle, VehicleDTO.class));
         } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
