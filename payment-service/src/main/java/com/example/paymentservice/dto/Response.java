@@ -13,10 +13,6 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Response {
 
-    private String token;
-    private String role;
-    private String expirationTime;
-
     private int statusCode;
     private String message;
 
