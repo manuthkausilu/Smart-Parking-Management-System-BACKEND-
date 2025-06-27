@@ -18,9 +18,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class JWTAuthFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JWTAuthFilter.class);
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -36,6 +40,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         final String userEmail;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            logger.info("[JWTAuthFilter] No Authorization header or not Bearer.");
             filterChain.doFilter(request, response);
             return;
         }
@@ -43,14 +48,20 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         jwtToken = authHeader.substring(7);
         userEmail = jwtUtils.extractUsername(jwtToken);
 
+        logger.info("[JWTAuthFilter] Extracted userEmail: {}", userEmail);
+
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
+            logger.info("[JWTAuthFilter] Loaded userDetails: {}", userDetails != null ? userDetails.getUsername() : "null");
             if (jwtUtils.isValidToken(jwtToken, userDetails)) {
+                logger.info("[JWTAuthFilter] Token is valid, setting authentication.");
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 securityContext.setAuthentication(token);
                 SecurityContextHolder.setContext(securityContext);
+            } else {
+                logger.warn("[JWTAuthFilter] Token is invalid.");
             }
         }
         filterChain.doFilter(request, response);
